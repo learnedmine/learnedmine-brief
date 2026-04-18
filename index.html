@@ -1,0 +1,1041 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Learnedmine — Website Design Brief</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+:root{--gold:#C9A84C;--gold-l:#E8C96A;--dark:#080808;--d2:#111111;--d3:#1a1a1a;--d4:#242424;--text:#F0EDE8;--muted:#888880;--border:rgba(201,168,76,.2);--r:2px;}
+*{margin:0;padding:0;box-sizing:border-box;}html{scroll-behavior:smooth;}
+body{background:var(--dark);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 80% 60% at 20% 10%,rgba(201,168,76,.06) 0%,transparent 60%),radial-gradient(ellipse 60% 80% at 80% 90%,rgba(201,168,76,.04) 0%,transparent 60%);pointer-events:none;z-index:0;}
+#setupBanner{position:relative;z-index:100;background:linear-gradient(135deg,#110d00,#1e1500);border-bottom:1px solid rgba(201,168,76,.4);}
+.sb-inner{max-width:860px;margin:0 auto;padding:0 28px;}
+.sb-head{display:flex;align-items:center;justify-content:space-between;padding:16px 0;cursor:pointer;user-select:none;}
+.sb-head h3{font-family:'Playfair Display',serif;font-size:.95rem;color:var(--gold);display:flex;align-items:center;gap:10px;}
+.sb-badge{font-family:'DM Sans',sans-serif;font-size:.6rem;background:rgba(201,168,76,.3);color:var(--gold);padding:3px 8px;border-radius:20px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--gold);}
+.sb-badge.ok{background:#2ECC71;color:#fff;border-color:#2ECC71;}
+.sb-chevron{color:var(--gold);font-size:1.1rem;transition:transform .3s;}
+.sb-chevron.open{transform:rotate(180deg);}
+.sb-body{display:none;padding-bottom:24px;}
+.sb-body.open{display:block;}
+.sb-intro{font-size:.8rem;color:var(--muted);line-height:1.7;margin-bottom:20px;}
+.sb-steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-bottom:20px;}
+.sb-step{background:rgba(201,168,76,.05);border:1px solid rgba(201,168,76,.15);border-radius:4px;padding:14px 16px;}
+.sb-step .n{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:900;color:var(--gold);line-height:1;margin-bottom:6px;}
+.sb-step h4{font-size:.8rem;color:var(--text);margin-bottom:4px;}
+.sb-step p{font-size:.74rem;color:var(--muted);line-height:1.6;}
+.sb-step code{background:rgba(255,255,255,.07);padding:2px 5px;border-radius:2px;color:var(--gold-l);font-family:monospace;font-size:.72rem;}
+.sb-fields{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-bottom:14px;}
+.sb-fields label{display:block;font-size:.7rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:5px;}
+.sb-fields input{width:100%;background:rgba(0,0,0,.5);border:1px solid rgba(201,168,76,.25);border-radius:var(--r);color:var(--text);font-family:'DM Sans',sans-serif;font-size:.82rem;padding:9px 12px;outline:none;transition:border-color .2s;}
+.sb-fields input:focus{border-color:var(--gold);}
+.sb-fields input::placeholder{color:rgba(255,255,255,.2);}
+.sb-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
+.sb-save{background:var(--gold);color:var(--dark);border:none;padding:9px 22px;font-family:'DM Sans',sans-serif;font-size:.75rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;border-radius:var(--r);cursor:pointer;transition:all .2s;}
+.sb-save:hover{background:var(--gold-l);}
+.sb-msg{font-size:.76rem;padding:6px 12px;border-radius:var(--r);display:none;}
+.sb-msg.ok{background:rgba(46,204,113,.15);color:#2ECC71;border:1px solid rgba(46,204,113,.3);display:inline-block;}
+.sb-msg.warn{background:rgba(201,168,76,.1);color:var(--gold);border:1px solid rgba(201,168,76,.2);display:inline-block;}
+header{position:sticky;top:0;z-index:90;display:flex;align-items:center;justify-content:space-between;padding:20px 40px;border-bottom:1px solid var(--border);background:rgba(8,8,8,.9);backdrop-filter:blur(14px);}
+.logo{font-family:'Playfair Display',serif;font-size:1.35rem;font-weight:700;color:var(--gold);text-decoration:none;letter-spacing:.04em;}
+.logo em{color:var(--text);font-style:italic;font-weight:400;}
+.hdr-contact{font-size:.73rem;color:var(--muted);text-align:right;line-height:1.7;}
+main{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;padding-top:20px;}
+.hero{text-align:center;padding:60px 24px 40px;max-width:680px;}
+.eyebrow{font-size:.68rem;letter-spacing:.25em;text-transform:uppercase;color:var(--gold);margin-bottom:20px;display:flex;align-items:center;justify-content:center;gap:10px;}
+.eyebrow::before,.eyebrow::after{content:'';display:block;width:36px;height:1px;background:var(--gold);opacity:.5;}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(2.4rem,5.5vw,4rem);font-weight:900;line-height:1.05;margin-bottom:18px;letter-spacing:-.02em;}
+.hero h1 em{font-style:italic;color:var(--gold);}
+.hero p{color:var(--muted);font-size:1rem;line-height:1.8;font-weight:300;}
+.prog-wrap{width:100%;max-width:660px;padding:0 24px 10px;}
+.prog-header{display:flex;justify-content:space-between;margin-bottom:8px;}
+.prog-label{font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);}
+.prog-count{font-family:'Playfair Display',serif;font-size:.88rem;color:var(--gold);}
+.prog-bar{height:2px;background:var(--d4);border-radius:2px;overflow:hidden;}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--gold-l));border-radius:2px;transition:width .5s cubic-bezier(.4,0,.2,1);}
+.step-dots{display:flex;gap:7px;justify-content:center;margin:14px 0;}
+.sdot{width:6px;height:6px;border-radius:50%;background:var(--d4);transition:all .3s;}
+.sdot.active{background:var(--gold);width:20px;border-radius:3px;}
+.form-wrap{width:100%;max-width:660px;padding:0 24px 80px;}
+.step{display:none;animation:fadeUp .45s cubic-bezier(.4,0,.2,1) forwards;}
+.step.active{display:block;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+.card{background:var(--d2);border:1px solid var(--border);border-radius:4px;padding:44px;position:relative;overflow:hidden;}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--gold),transparent);}
+.snum{font-family:'Playfair Display',serif;font-size:3.5rem;font-weight:900;color:var(--d4);line-height:1;margin-bottom:4px;user-select:none;}
+.stitle{font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;margin-bottom:8px;line-height:1.2;}
+.sdesc{color:var(--muted);font-size:.86rem;line-height:1.7;margin-bottom:32px;font-weight:300;}
+.fg{margin-bottom:24px;}
+label.fl{display:block;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:8px;font-weight:500;}
+label.fl .req{color:var(--gold);margin-left:2px;}
+input[type=text],input[type=email],input[type=tel],input[type=url],textarea,select{width:100%;background:var(--d3);border:1px solid rgba(255,255,255,.08);border-radius:var(--r);color:var(--text);font-family:'DM Sans',sans-serif;font-size:.92rem;font-weight:300;padding:13px 16px;outline:none;transition:border-color .25s,box-shadow .25s;-webkit-appearance:none;}
+input:focus,textarea:focus,select:focus{border-color:var(--gold);box-shadow:0 0 0 3px rgba(201,168,76,.08);}
+textarea{resize:vertical;min-height:100px;line-height:1.6;}
+select{cursor:pointer;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23C9A84C' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:36px;}
+select option{background:var(--d3);}
+.hint{font-size:.73rem;color:var(--muted);margin-top:6px;font-style:italic;font-weight:300;}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.cgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(175px,1fr));gap:9px;}
+.cgrid.col2{grid-template-columns:1fr 1fr;}
+.cgrid.col3{grid-template-columns:repeat(3,1fr);}
+.ci{position:relative;}
+.ci input{display:none;}
+.ci label{display:flex;align-items:center;gap:9px;padding:11px 14px;background:var(--d3);border:1px solid rgba(255,255,255,.06);border-radius:var(--r);cursor:pointer;font-size:.82rem;letter-spacing:.03em;color:var(--muted);transition:all .2s;user-select:none;}
+.ci label .dot{width:15px;height:15px;border:1px solid rgba(201,168,76,.35);border-radius:2px;flex-shrink:0;transition:all .2s;display:flex;align-items:center;justify-content:center;}
+.ci.radio label .dot{border-radius:50%;}
+.ci input:checked+label{border-color:var(--gold);background:rgba(201,168,76,.07);color:var(--text);}
+.ci input:checked+label .dot{background:var(--gold);border-color:var(--gold);}
+.ci input:checked+label .dot::after{content:'✓';color:var(--dark);font-size:9px;font-weight:700;}
+.ci.radio input:checked+label .dot::after{content:'';width:6px;height:6px;background:var(--dark);border-radius:50%;}
+.brow{display:flex;gap:14px;margin-top:36px;align-items:center;}
+.btn{display:inline-flex;align-items:center;gap:9px;padding:13px 28px;border:none;border-radius:var(--r);font-family:'DM Sans',sans-serif;font-size:.78rem;font-weight:500;letter-spacing:.12em;text-transform:uppercase;cursor:pointer;transition:all .28s;}
+.btn-p{background:var(--gold);color:var(--dark);}
+.btn-p:hover{background:var(--gold-l);transform:translateY(-2px);box-shadow:0 8px 24px rgba(201,168,76,.25);}
+.btn-g{background:transparent;color:var(--muted);border:1px solid rgba(255,255,255,.1);}
+.btn-g:hover{color:var(--text);border-color:rgba(255,255,255,.22);}
+.btn svg{width:15px;height:15px;flex-shrink:0;}
+.upload-zone{border:2px dashed rgba(201,168,76,.25);border-radius:4px;padding:36px 24px;text-align:center;cursor:pointer;transition:all .25s;background:rgba(201,168,76,.03);position:relative;}
+.upload-zone:hover{border-color:var(--gold);background:rgba(201,168,76,.07);}
+.upload-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
+.upload-icon{font-size:2rem;margin-bottom:10px;}
+.upload-zone h4{font-family:'Playfair Display',serif;font-size:1.05rem;margin-bottom:6px;}
+.upload-zone p{font-size:.78rem;color:var(--muted);font-weight:300;}
+.upload-zone .accepted{font-size:.7rem;color:rgba(201,168,76,.6);margin-top:8px;letter-spacing:.06em;}
+.file-list{margin-top:16px;display:flex;flex-direction:column;gap:8px;}
+.file-item{display:flex;align-items:center;justify-content:space-between;background:var(--d3);border:1px solid rgba(201,168,76,.15);border-radius:var(--r);padding:10px 14px;font-size:.8rem;}
+.file-item .fname{color:var(--text);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.file-item .fsize{color:var(--muted);margin-left:10px;font-size:.72rem;}
+.file-item .fdel{background:none;border:none;color:var(--muted);cursor:pointer;font-size:1rem;padding:0 4px;transition:color .2s;}
+.file-item .fdel:hover{color:#e74c3c;}
+.or-div{display:flex;align-items:center;gap:14px;margin:20px 0;color:var(--muted);font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;}
+.or-div::before,.or-div::after{content:'';flex:1;height:1px;background:rgba(255,255,255,.08);}
+.asset-cat{background:var(--d3);border:1px solid rgba(255,255,255,.06);border-radius:4px;overflow:hidden;margin-bottom:12px;}
+.asset-head{display:flex;align-items:center;gap:12px;padding:14px 18px;cursor:pointer;user-select:none;transition:background .2s;}
+.asset-head:hover{background:rgba(255,255,255,.03);}
+.asset-check{width:20px;height:20px;border:1px solid rgba(201,168,76,.35);border-radius:3px;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .2s;}
+.asset-head.on .asset-check{background:var(--gold);border-color:var(--gold);}
+.asset-head.on .asset-check::after{content:'✓';color:var(--dark);font-size:10px;font-weight:700;}
+.asset-head h4{font-size:.88rem;color:var(--muted);transition:color .2s;}
+.asset-head.on h4{color:var(--text);}
+.asset-badge{margin-left:auto;font-size:.65rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);}
+.asset-body{display:none;padding:0 18px 18px;border-top:1px solid rgba(255,255,255,.05);}
+.asset-body.open{display:block;}
+.success{display:none;animation:fadeUp .6s ease forwards;}
+.success-icon{width:76px;height:76px;border:2px solid var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 28px;font-size:1.8rem;}
+.success h2{font-family:'Playfair Display',serif;font-size:2.2rem;margin-bottom:14px;}
+.scards{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:28px;}
+.scard{background:var(--d2);border:1px solid var(--border);border-radius:4px;padding:20px 22px;}
+.scard .sc-icon{font-size:1.4rem;margin-bottom:10px;}
+.scard h4{font-family:'Playfair Display',serif;font-size:.95rem;margin-bottom:6px;color:var(--gold);}
+.scard p{font-size:.78rem;color:var(--muted);line-height:1.6;}
+.scontact{background:var(--d2);border:1px solid var(--border);border-radius:4px;padding:24px;margin-bottom:28px;}
+.scontact-label{font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);margin-bottom:14px;}
+.scontact p{font-size:.85rem;line-height:2;color:var(--text);}
+.btn-reset{background:var(--d3);color:var(--muted);border:1px solid rgba(255,255,255,.1);padding:14px 32px;font-family:'DM Sans',sans-serif;font-size:.78rem;font-weight:500;letter-spacing:.12em;text-transform:uppercase;border-radius:var(--r);cursor:pointer;transition:all .25s;display:inline-flex;align-items:center;gap:9px;margin-top:8px;}
+.btn-reset:hover{color:var(--text);border-color:var(--gold);background:rgba(201,168,76,.05);}
+.spinner{display:none;width:16px;height:16px;border:2px solid rgba(8,8,8,.25);border-top:2px solid var(--dark);border-radius:50%;animation:spin .6s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg)}}
+.btn-p.loading .spinner{display:block;}
+.btn-p.loading .lbl{display:none;}
+#toast{position:fixed;bottom:28px;right:28px;z-index:9999;background:var(--d2);border:1px solid var(--gold);border-radius:4px;padding:14px 20px;font-size:.82rem;color:var(--text);max-width:320px;transform:translateY(80px);opacity:0;transition:all .35s;pointer-events:none;}
+#toast.show{transform:translateY(0);opacity:1;}
+#toast.err{border-color:#e74c3c;color:#e74c3c;}
+#toast.ok{border-color:#2ECC71;color:#2ECC71;}
+.info-tip{background:rgba(201,168,76,.07);border:1px solid rgba(201,168,76,.2);border-radius:3px;padding:12px 14px;font-size:.8rem;color:var(--text);line-height:1.6;}
+footer{position:relative;z-index:1;border-top:1px solid var(--border);padding:22px 40px;display:flex;justify-content:space-between;align-items:center;font-size:.74rem;color:var(--muted);}
+footer a{color:var(--gold);text-decoration:none;}
+@media(max-width:640px){
+  header{padding:18px 20px;}
+  .card{padding:28px 20px;}
+  .frow{grid-template-columns:1fr;}
+  .cgrid{grid-template-columns:1fr 1fr;}
+  .cgrid.col3{grid-template-columns:1fr 1fr;}
+  .scards{grid-template-columns:1fr;}
+  footer{flex-direction:column;gap:10px;text-align:center;}
+  .brow{flex-wrap:wrap;}
+}
+</style>
+</head>
+<body>
+
+<!-- SETUP BANNER REMOVED - credentials are hardcoded below -->
+<div id="setupBanner" style="display:none">
+  <div class="sb-inner">
+    <div class="sb-head" id="sbHead">
+      <h3>&#9881;&#65039; Email Setup <span class="sb-badge" id="setupBadge">CONFIGURED</span></h3>
+      <div class="sb-chevron" id="sbChevron">&#9660;</div>
+    </div>
+    <div class="sb-body" id="sbBody">
+      <div class="sb-steps"></div>
+      <div class="sb-fields">
+        <div><label>Service ID</label><input type="text" id="cfgSvc" placeholder="service_xxxxxxx"></div>
+        <div><label>Template ID</label><input type="text" id="cfgTpl" placeholder="template_xxxxxxx"></div>
+        <div><label>Public Key</label><input type="text" id="cfgKey" placeholder="xxxxxxxxxxxxxxxxxxxx"></div>
+      </div>
+      <div class="sb-row">
+        <button class="sb-save" id="saveConfigBtn">Save Configuration</button>
+        <span class="sb-msg" id="cfgMsg"></span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<header>
+  <a href="#" class="logo">Learned<em>mine</em></a>
+  <div class="hdr-contact">
+    <div>Moses Lugalia</div>
+    <div id="hdrEmail"></div>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="eyebrow">Website Design Brief</div>
+    <h1>Let&#8217;s Build Something <em>Extraordinary</em></h1>
+    <p>Answer these questions so we can design a website that perfectly represents your business. Takes about 5&#8211;8 minutes.</p>
+  </section>
+
+  <div class="prog-wrap">
+    <div class="prog-header">
+      <span class="prog-label">Your Progress</span>
+      <span class="prog-count" id="progCount">Step 1 of 9</span>
+    </div>
+    <div class="prog-bar"><div class="prog-fill" id="progFill" style="width:11.1%"></div></div>
+  </div>
+  <div class="step-dots" id="stepDots"></div>
+
+  <div class="form-wrap">
+    <form id="mainForm" novalidate>
+
+      <!-- STEP 1 -->
+      <div class="step active" data-step="1">
+        <div class="card">
+          <div class="snum">01</div><h2 class="stitle">About Your Business</h2>
+          <p class="sdesc">Let&#8217;s start with who you are. This helps us design for the right person from the very first line of code.</p>
+          <div class="frow">
+            <div class="fg"><label class="fl">Full Name <span class="req">*</span></label><input type="text" id="q_name" placeholder="Jane Doe"></div>
+            <div class="fg"><label class="fl">Email Address <span class="req">*</span></label><input type="email" id="q_email" placeholder="you@example.com"></div>
+          </div>
+          <div class="frow">
+            <div class="fg"><label class="fl">Phone / WhatsApp</label><input type="tel" id="q_phone" placeholder="+254 700 000 000"></div>
+            <div class="fg"><label class="fl">Business / Brand Name <span class="req">*</span></label><input type="text" id="q_biz" placeholder="Acme Ltd."></div>
+          </div>
+          <div class="fg"><label class="fl">What does your business do? <span class="req">*</span></label><textarea id="q_bizDesc" placeholder="Describe your products or services, who you help, and what makes you different..."></textarea></div>
+          <div class="fg"><label class="fl">Industry / Sector</label>
+            <select id="q_industry">
+              <option value="">&#8212; Select your industry &#8212;</option>
+              <option>E-commerce / Retail</option><option>Health &amp; Wellness</option><option>Education &amp; Training</option>
+              <option>Food &amp; Hospitality</option><option>Real Estate</option><option>Finance &amp; Consulting</option>
+              <option>Technology &amp; SaaS</option><option>Creative &amp; Media</option><option>Non-profit / NGO</option>
+              <option>Beauty &amp; Fashion</option><option>Construction &amp; Engineering</option><option>Agriculture</option><option>Other</option>
+            </select>
+          </div>
+          <div class="brow">
+            <button type="button" class="btn btn-p" id="nav-n1"><span class="lbl">Continue</span><div class="spinner"></div><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 2 -->
+      <div class="step" data-step="2">
+        <div class="card">
+          <div class="snum">02</div><h2 class="stitle">Website Goals &amp; Purpose</h2>
+          <p class="sdesc">A great website is built around a single clear goal. Let&#8217;s define what yours should accomplish.</p>
+          <div class="fg"><label class="fl">Primary Goal <span class="req">*</span></label>
+            <div class="cgrid">
+              <div class="ci radio"><input type="radio" name="goal" id="g1" value="Sell Products Online"><label for="g1"><span class="dot"></span>Sell Products Online</label></div>
+              <div class="ci radio"><input type="radio" name="goal" id="g2" value="Generate Leads"><label for="g2"><span class="dot"></span>Generate Leads</label></div>
+              <div class="ci radio"><input type="radio" name="goal" id="g3" value="Showcase Portfolio"><label for="g3"><span class="dot"></span>Showcase Portfolio</label></div>
+              <div class="ci radio"><input type="radio" name="goal" id="g4" value="Provide Information"><label for="g4"><span class="dot"></span>Provide Information</label></div>
+              <div class="ci radio"><input type="radio" name="goal" id="g5" value="Book Appointments"><label for="g5"><span class="dot"></span>Book Appointments</label></div>
+              <div class="ci radio"><input type="radio" name="goal" id="g6" value="Build Community"><label for="g6"><span class="dot"></span>Build a Community</label></div>
+              <div class="ci radio"><input type="radio" name="goal" id="g7" value="Raise Donations"><label for="g7"><span class="dot"></span>Raise Donations</label></div>
+              <div class="ci radio"><input type="radio" name="goal" id="g8" value="Other"><label for="g8"><span class="dot"></span>Other</label></div>
+            </div>
+          </div>
+          <div class="fg"><label class="fl">The ONE action every visitor should take</label><input type="text" id="q_cta" placeholder="e.g. Call us, Buy now, Book a free consultation"></div>
+          <div class="fg"><label class="fl">Who is your target audience? <span class="req">*</span></label><textarea id="q_audience" placeholder="Age, location, interests, problems, what they&#8217;re searching for..."></textarea></div>
+          <div class="fg"><label class="fl">Top 1&#8211;3 competitors (URLs if possible)</label><input type="text" id="q_comp" placeholder="e.g. www.competitor1.com, www.competitor2.com"><p class="hint">Knowing your competition helps us design something that stands out.</p></div>
+          <div class="brow">
+            <button type="button" class="btn btn-g" id="nav-p2"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 8H3M7 4L3 8l4 4"/></svg>Back</button>
+            <button type="button" class="btn btn-p" id="nav-n2"><span class="lbl">Continue</span><div class="spinner"></div><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 3 -->
+      <div class="step" data-step="3">
+        <div class="card">
+          <div class="snum">03</div><h2 class="stitle">Look &amp; Feel</h2>
+          <p class="sdesc">Design communicates who you are before a word is read. Help us understand the visual identity you&#8217;re going for.</p>
+          <div class="fg"><label class="fl">How should your website feel? (select all that apply)</label>
+            <div class="cgrid">
+              <div class="ci"><input type="checkbox" id="v1" value="Modern &amp; Bold"><label for="v1"><span class="dot"></span>Modern &amp; Bold</label></div>
+              <div class="ci"><input type="checkbox" id="v2" value="Elegant &amp; Luxurious"><label for="v2"><span class="dot"></span>Elegant &amp; Luxurious</label></div>
+              <div class="ci"><input type="checkbox" id="v3" value="Clean &amp; Minimal"><label for="v3"><span class="dot"></span>Clean &amp; Minimal</label></div>
+              <div class="ci"><input type="checkbox" id="v4" value="Playful &amp; Fun"><label for="v4"><span class="dot"></span>Playful &amp; Fun</label></div>
+              <div class="ci"><input type="checkbox" id="v5" value="Corporate &amp; Professional"><label for="v5"><span class="dot"></span>Corporate &amp; Professional</label></div>
+              <div class="ci"><input type="checkbox" id="v6" value="Warm &amp; Friendly"><label for="v6"><span class="dot"></span>Warm &amp; Friendly</label></div>
+              <div class="ci"><input type="checkbox" id="v7" value="Dark &amp; Dramatic"><label for="v7"><span class="dot"></span>Dark &amp; Dramatic</label></div>
+              <div class="ci"><input type="checkbox" id="v8" value="Earthy &amp; Natural"><label for="v8"><span class="dot"></span>Earthy &amp; Natural</label></div>
+              <div class="ci"><input type="checkbox" id="v9" value="Youthful &amp; Trendy"><label for="v9"><span class="dot"></span>Youthful &amp; Trendy</label></div>
+              <div class="ci"><input type="checkbox" id="v10" value="Trustworthy &amp; Secure"><label for="v10"><span class="dot"></span>Trustworthy &amp; Secure</label></div>
+            </div>
+          </div>
+          <div class="fg"><label class="fl">Preferred color scheme</label>
+            <select id="q_colors">
+              <option value="">&#8212; Let Learnedmine decide &#8212;</option>
+              <option>Black &amp; Gold (Luxury)</option><option>Navy &amp; White (Professional)</option>
+              <option>Earthy Tones (Natural)</option><option>Bright &amp; Vibrant (Energetic)</option>
+              <option>Pastel &amp; Soft (Friendly)</option><option>Monochrome (Minimal)</option>
+              <option>I have specific brand colors (I&#8217;ll describe below)</option>
+            </select>
+          </div>
+          <div class="fg"><label class="fl">Brand colors (hex codes or description)</label><input type="text" id="q_brandColors" placeholder="e.g. #1A3A6B (deep navy), #F5A623 (amber)"></div>
+          <div class="fg"><label class="fl">1&#8211;3 websites whose design you love &amp; why</label><textarea id="q_inspo" placeholder="e.g. apple.com &#8212; clean layout and bold typography&#10;airbnb.com &#8212; feels warm and trustworthy"></textarea></div>
+          <div class="fg"><label class="fl">Anything you absolutely DON&#8217;T want</label><input type="text" id="q_dontWant" placeholder="e.g. No red, no stock photos, no cluttered layouts"></div>
+          <div class="brow">
+            <button type="button" class="btn btn-g" id="nav-p3"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 8H3M7 4L3 8l4 4"/></svg>Back</button>
+            <button type="button" class="btn btn-p" id="nav-n3"><span class="lbl">Continue</span><div class="spinner"></div><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 4 -->
+      <div class="step" data-step="4">
+        <div class="card">
+          <div class="snum">04</div><h2 class="stitle">Pages &amp; Structure</h2>
+          <p class="sdesc">What pages will live on your website? Select everything you need.</p>
+          <div class="fg"><label class="fl">Pages needed <span class="req">*</span></label>
+            <div class="cgrid">
+              <div class="ci"><input type="checkbox" id="pg1" value="Home"><label for="pg1"><span class="dot"></span>Home</label></div>
+              <div class="ci"><input type="checkbox" id="pg2" value="About Us"><label for="pg2"><span class="dot"></span>About Us</label></div>
+              <div class="ci"><input type="checkbox" id="pg3" value="Services"><label for="pg3"><span class="dot"></span>Services</label></div>
+              <div class="ci"><input type="checkbox" id="pg4" value="Products / Shop"><label for="pg4"><span class="dot"></span>Products / Shop</label></div>
+              <div class="ci"><input type="checkbox" id="pg5" value="Portfolio / Gallery"><label for="pg5"><span class="dot"></span>Portfolio / Gallery</label></div>
+              <div class="ci"><input type="checkbox" id="pg6" value="Blog / News"><label for="pg6"><span class="dot"></span>Blog / News</label></div>
+              <div class="ci"><input type="checkbox" id="pg7" value="Testimonials"><label for="pg7"><span class="dot"></span>Testimonials</label></div>
+              <div class="ci"><input type="checkbox" id="pg8" value="FAQs"><label for="pg8"><span class="dot"></span>FAQs</label></div>
+              <div class="ci"><input type="checkbox" id="pg9" value="Pricing"><label for="pg9"><span class="dot"></span>Pricing</label></div>
+              <div class="ci"><input type="checkbox" id="pg10" value="Contact"><label for="pg10"><span class="dot"></span>Contact</label></div>
+              <div class="ci"><input type="checkbox" id="pg11" value="Team Page"><label for="pg11"><span class="dot"></span>Team Page</label></div>
+              <div class="ci"><input type="checkbox" id="pg12" value="Events"><label for="pg12"><span class="dot"></span>Events</label></div>
+            </div>
+          </div>
+          <div class="fg"><label class="fl">Any additional pages?</label><input type="text" id="q_extraPages" placeholder="e.g. Career page, membership portal, donation page..."></div>
+          <div class="fg"><label class="fl">Existing website?</label>
+            <div class="cgrid col3">
+              <div class="ci radio"><input type="radio" name="existing" id="ex1" value="No &#8212; brand new"><label for="ex1"><span class="dot"></span>No, brand new</label></div>
+              <div class="ci radio"><input type="radio" name="existing" id="ex2" value="Yes &#8212; full redesign"><label for="ex2"><span class="dot"></span>Yes, redesign it</label></div>
+              <div class="ci radio"><input type="radio" name="existing" id="ex3" value="Yes &#8212; add to it"><label for="ex3"><span class="dot"></span>Yes, add to it</label></div>
+            </div>
+          </div>
+          <div class="fg"><label class="fl">Existing website URL</label><input type="url" id="q_existUrl" placeholder="https://yourwebsite.com"></div>
+          <div class="brow">
+            <button type="button" class="btn btn-g" id="nav-p4"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 8H3M7 4L3 8l4 4"/></svg>Back</button>
+            <button type="button" class="btn btn-p" id="nav-n4"><span class="lbl">Continue</span><div class="spinner"></div><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 5 -->
+      <div class="step" data-step="5">
+        <div class="card">
+          <div class="snum">05</div><h2 class="stitle">Features &amp; Functionality</h2>
+          <p class="sdesc">Beyond great design, what should your website actually be able to do?</p>
+          <div class="fg"><label class="fl">Features needed (select all that apply)</label>
+            <div class="cgrid">
+              <div class="ci"><input type="checkbox" id="f1" value="Contact Form"><label for="f1"><span class="dot"></span>Contact Form</label></div>
+              <div class="ci"><input type="checkbox" id="f2" value="Online Store"><label for="f2"><span class="dot"></span>Online Store</label></div>
+              <div class="ci"><input type="checkbox" id="f3" value="Appointment Booking"><label for="f3"><span class="dot"></span>Appointment Booking</label></div>
+              <div class="ci"><input type="checkbox" id="f4" value="Blog / CMS"><label for="f4"><span class="dot"></span>Blog / CMS</label></div>
+              <div class="ci"><input type="checkbox" id="f5" value="Live Chat Widget"><label for="f5"><span class="dot"></span>Live Chat</label></div>
+              <div class="ci"><input type="checkbox" id="f6" value="Email Newsletter"><label for="f6"><span class="dot"></span>Email Newsletter</label></div>
+              <div class="ci"><input type="checkbox" id="f7" value="Social Media Feed"><label for="f7"><span class="dot"></span>Social Media Feed</label></div>
+              <div class="ci"><input type="checkbox" id="f8" value="Photo / Video Gallery"><label for="f8"><span class="dot"></span>Photo / Video Gallery</label></div>
+              <div class="ci"><input type="checkbox" id="f9" value="Members Login Area"><label for="f9"><span class="dot"></span>Members Login Area</label></div>
+              <div class="ci"><input type="checkbox" id="f10" value="Payment Gateway (M-Pesa / Stripe)"><label for="f10"><span class="dot"></span>Payment Gateway</label></div>
+              <div class="ci"><input type="checkbox" id="f11" value="SEO Optimization"><label for="f11"><span class="dot"></span>SEO Optimization</label></div>
+              <div class="ci"><input type="checkbox" id="f12" value="Google Analytics"><label for="f12"><span class="dot"></span>Analytics Tracking</label></div>
+              <div class="ci"><input type="checkbox" id="f13" value="Multilingual Support"><label for="f13"><span class="dot"></span>Multilingual</label></div>
+              <div class="ci"><input type="checkbox" id="f14" value="WhatsApp Chat Button"><label for="f14"><span class="dot"></span>WhatsApp Button</label></div>
+            </div>
+          </div>
+          <div class="fg"><label class="fl">Any other features?</label><textarea id="q_otherFeat" placeholder="Describe anything unique your website needs to do..."></textarea></div>
+          <div class="fg"><label class="fl">Will you update content yourself after launch?</label>
+            <div class="cgrid col3">
+              <div class="ci radio"><input type="radio" name="cms" id="cms1" value="Yes &#8212; I&#8217;ll manage it"><label for="cms1"><span class="dot"></span>Yes, I&#8217;ll manage it</label></div>
+              <div class="ci radio"><input type="radio" name="cms" id="cms2" value="Rarely"><label for="cms2"><span class="dot"></span>Rarely</label></div>
+              <div class="ci radio"><input type="radio" name="cms" id="cms3" value="No &#8212; Learnedmine will handle it"><label for="cms3"><span class="dot"></span>No, Learnedmine will</label></div>
+            </div>
+          </div>
+          <div class="brow">
+            <button type="button" class="btn btn-g" id="nav-p5"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 8H3M7 4L3 8l4 4"/></svg>Back</button>
+            <button type="button" class="btn btn-p" id="nav-n5"><span class="lbl">Continue</span><div class="spinner"></div><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 6 -->
+      <div class="step" data-step="6">
+        <div class="card">
+          <div class="snum">06</div><h2 class="stitle">Content &amp; Branding</h2>
+          <p class="sdesc">Great design needs great content. Let&#8217;s understand what you already have.</p>
+          <div class="fg"><label class="fl">Do you have a logo?</label>
+            <div class="cgrid col3">
+              <div class="ci radio"><input type="radio" name="logo" id="l1" value="Yes &#8212; ready to go"><label for="l1"><span class="dot"></span>Yes, ready to go</label></div>
+              <div class="ci radio"><input type="radio" name="logo" id="l2" value="No &#8212; need one designed"><label for="l2"><span class="dot"></span>No, need one</label></div>
+              <div class="ci radio"><input type="radio" name="logo" id="l3" value="Currently being designed"><label for="l3"><span class="dot"></span>Being designed</label></div>
+            </div>
+          </div>
+          <div class="fg"><label class="fl">Content you already have</label>
+            <div class="cgrid">
+              <div class="ci"><input type="checkbox" id="c1" value="Written copy / text"><label for="c1"><span class="dot"></span>Written copy / text</label></div>
+              <div class="ci"><input type="checkbox" id="c2" value="Professional photos"><label for="c2"><span class="dot"></span>Professional photos</label></div>
+              <div class="ci"><input type="checkbox" id="c3" value="Product images"><label for="c3"><span class="dot"></span>Product images</label></div>
+              <div class="ci"><input type="checkbox" id="c4" value="Videos"><label for="c4"><span class="dot"></span>Videos</label></div>
+              <div class="ci"><input type="checkbox" id="c5" value="Testimonials / Reviews"><label for="c5"><span class="dot"></span>Testimonials / Reviews</label></div>
+              <div class="ci"><input type="checkbox" id="c6" value="None &#8212; need help"><label for="c6"><span class="dot"></span>None &#8212; need help</label></div>
+            </div>
+          </div>
+          <div class="fg"><label class="fl">Social media platforms</label>
+            <div class="cgrid">
+              <div class="ci"><input type="checkbox" id="s1" value="Instagram"><label for="s1"><span class="dot"></span>Instagram</label></div>
+              <div class="ci"><input type="checkbox" id="s2" value="Facebook"><label for="s2"><span class="dot"></span>Facebook</label></div>
+              <div class="ci"><input type="checkbox" id="s3" value="LinkedIn"><label for="s3"><span class="dot"></span>LinkedIn</label></div>
+              <div class="ci"><input type="checkbox" id="s4" value="TikTok"><label for="s4"><span class="dot"></span>TikTok</label></div>
+              <div class="ci"><input type="checkbox" id="s5" value="YouTube"><label for="s5"><span class="dot"></span>YouTube</label></div>
+              <div class="ci"><input type="checkbox" id="s6" value="Twitter / X"><label for="s6"><span class="dot"></span>Twitter / X</label></div>
+            </div>
+          </div>
+          <div class="fg"><label class="fl">Domain &amp; Hosting status</label>
+            <div class="cgrid col2">
+              <div class="ci radio"><input type="radio" name="hosting" id="h1" value="Have both domain and hosting"><label for="h1"><span class="dot"></span>Have domain &amp; hosting</label></div>
+              <div class="ci radio"><input type="radio" name="hosting" id="h2" value="Domain only"><label for="h2"><span class="dot"></span>Domain only</label></div>
+              <div class="ci radio"><input type="radio" name="hosting" id="h3" value="Need both"><label for="h3"><span class="dot"></span>Need both</label></div>
+              <div class="ci radio"><input type="radio" name="hosting" id="h4" value="Not sure"><label for="h4"><span class="dot"></span>Not sure</label></div>
+            </div>
+          </div>
+          <div class="fg"><label class="fl">Domain name (if you have one)</label><input type="url" id="q_domain" placeholder="https://yourdomain.com"></div>
+          <div class="brow">
+            <button type="button" class="btn btn-g" id="nav-p6"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 8H3M7 4L3 8l4 4"/></svg>Back</button>
+            <button type="button" class="btn btn-p" id="nav-n6"><span class="lbl">Continue</span><div class="spinner"></div><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 7 -->
+      <div class="step" data-step="7">
+        <div class="card">
+          <div class="snum">07</div><h2 class="stitle">Share Your Assets</h2>
+          <p class="sdesc">If you have files ready &#8212; logos, photos, documents or videos &#8212; select what you have and upload or share a link.</p>
+          <div id="assetWrap">
+            <div class="asset-cat">
+              <div class="asset-head" data-key="logo"><div class="asset-check"></div><h4>&#127912; Logo File</h4><span class="asset-badge">PNG / SVG / AI</span></div>
+              <div class="asset-body" id="ab-logo">
+                <div style="height:14px"></div>
+                <div class="upload-zone"><input type="file" accept=".png,.svg,.ai,.pdf,.jpg,.eps" data-key="logo" multiple><div class="upload-icon">&#128206;</div><h4>Drop your logo here</h4><p>or click to browse</p><div class="accepted">PNG &#183; SVG &#183; AI &#183; EPS &#183; PDF</div></div>
+                <div class="file-list" id="fl-logo"></div>
+                <div class="or-div">or share a link</div>
+                <div class="fg" style="margin:0"><label class="fl">Google Drive / Dropbox link</label><input type="url" id="lnk-logo" placeholder="https://drive.google.com/..."></div>
+              </div>
+            </div>
+            <div class="asset-cat">
+              <div class="asset-head" data-key="photos"><div class="asset-check"></div><h4>&#128247; Business / Product Photos</h4><span class="asset-badge">JPG / PNG</span></div>
+              <div class="asset-body" id="ab-photos">
+                <div style="height:14px"></div>
+                <div class="upload-zone"><input type="file" accept="image/*" data-key="photos" multiple><div class="upload-icon">&#128444;&#65039;</div><h4>Drop your photos here</h4><p>Upload multiple images at once</p><div class="accepted">JPG &#183; PNG &#183; WEBP &#183; max 10MB each</div></div>
+                <div class="file-list" id="fl-photos"></div>
+                <div class="or-div">or share a folder link</div>
+                <div class="fg" style="margin:0"><label class="fl">Google Drive folder link</label><input type="url" id="lnk-photos" placeholder="https://drive.google.com/drive/folders/..."></div>
+              </div>
+            </div>
+            <div class="asset-cat">
+              <div class="asset-head" data-key="copy"><div class="asset-check"></div><h4>&#128221; Written Content / Copy</h4><span class="asset-badge">DOCX / PDF</span></div>
+              <div class="asset-body" id="ab-copy">
+                <div style="height:14px"></div>
+                <div class="upload-zone"><input type="file" accept=".doc,.docx,.pdf,.txt" data-key="copy" multiple><div class="upload-icon">&#128196;</div><h4>Drop documents here</h4><p>Page text, product descriptions, about us&#8230;</p><div class="accepted">DOCX &#183; PDF &#183; TXT</div></div>
+                <div class="file-list" id="fl-copy"></div>
+                <div class="or-div">or share a link</div>
+                <div class="fg" style="margin:0"><label class="fl">Google Docs link</label><input type="url" id="lnk-copy" placeholder="https://docs.google.com/..."></div>
+              </div>
+            </div>
+            <div class="asset-cat">
+              <div class="asset-head" data-key="videos"><div class="asset-check"></div><h4>&#127916; Videos</h4><span class="asset-badge">YouTube / Vimeo link</span></div>
+              <div class="asset-body" id="ab-videos">
+                <div style="height:14px"></div>
+                <p class="hint" style="margin-bottom:14px;">Videos are best shared via link rather than direct upload.</p>
+                <div class="fg" style="margin:0"><label class="fl">YouTube / Vimeo / Drive link</label><input type="url" id="lnk-videos" placeholder="https://youtube.com/..."></div>
+              </div>
+            </div>
+            <div class="asset-cat">
+              <div class="asset-head" data-key="brand"><div class="asset-check"></div><h4>&#128203; Brand Guidelines</h4><span class="asset-badge">PDF / DOCX</span></div>
+              <div class="asset-body" id="ab-brand">
+                <div style="height:14px"></div>
+                <div class="upload-zone"><input type="file" accept=".pdf,.doc,.docx" data-key="brand" multiple><div class="upload-icon">&#128203;</div><h4>Drop brand guide here</h4><p>Fonts, colors, logo usage rules&#8230;</p><div class="accepted">PDF &#183; DOCX</div></div>
+                <div class="file-list" id="fl-brand"></div>
+                <div class="or-div">or share a link</div>
+                <div class="fg" style="margin:0"><label class="fl">Link to brand guide</label><input type="url" id="lnk-brand" placeholder="https://..."></div>
+              </div>
+            </div>
+          </div>
+          <div class="fg" style="margin-top:20px"><label class="fl">Notes about your assets</label><textarea id="q_assetNotes" placeholder="e.g. The white background logo is the main one. Photos 1-5 are for the hero section."></textarea></div>
+          <div class="info-tip" style="margin-bottom:20px">&#128161; <strong>Don&#8217;t have everything yet?</strong> That&#8217;s fine &#8212; skip what you don&#8217;t have. You can always send files later via WhatsApp or email once we connect.</div>
+          <div class="brow">
+            <button type="button" class="btn btn-g" id="nav-p7"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 8H3M7 4L3 8l4 4"/></svg>Back</button>
+            <button type="button" class="btn btn-p" id="nav-n7"><span class="lbl">Continue</span><div class="spinner"></div><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 8 -->
+      <div class="step" data-step="8">
+        <div class="card">
+          <div class="snum">08</div><h2 class="stitle">Budget &amp; Timeline</h2>
+          <p class="sdesc">Help us understand your investment range and urgency so we can propose the right package.</p>
+          <div class="fg"><label class="fl">Budget range (KES)</label>
+            <div class="cgrid col2">
+              <div class="ci radio"><input type="radio" name="budget" id="b1" value="Under KES 20,000"><label for="b1"><span class="dot"></span>Under KES 20,000</label></div>
+              <div class="ci radio"><input type="radio" name="budget" id="b2" value="KES 20,000 &#8211; 50,000"><label for="b2"><span class="dot"></span>KES 20,000 &#8211; 50,000</label></div>
+              <div class="ci radio"><input type="radio" name="budget" id="b3" value="KES 50,000 &#8211; 100,000"><label for="b3"><span class="dot"></span>KES 50,000 &#8211; 100,000</label></div>
+              <div class="ci radio"><input type="radio" name="budget" id="b4" value="KES 100,000 &#8211; 200,000"><label for="b4"><span class="dot"></span>KES 100,000 &#8211; 200,000</label></div>
+              <div class="ci radio"><input type="radio" name="budget" id="b5" value="KES 200,000+"><label for="b5"><span class="dot"></span>KES 200,000+</label></div>
+              <div class="ci radio"><input type="radio" name="budget" id="b6" value="Open &#8212; let&#8217;s discuss"><label for="b6"><span class="dot"></span>Let&#8217;s discuss</label></div>
+            </div>
+          </div>
+          <div class="fg"><label class="fl">When do you need it launched?</label>
+            <div class="cgrid col2">
+              <div class="ci radio"><input type="radio" name="timeline" id="t1" value="ASAP &#8212; 1&#8211;2 weeks"><label for="t1"><span class="dot"></span>ASAP (1&#8211;2 weeks)</label></div>
+              <div class="ci radio"><input type="radio" name="timeline" id="t2" value="Within 1 month"><label for="t2"><span class="dot"></span>1 Month</label></div>
+              <div class="ci radio"><input type="radio" name="timeline" id="t3" value="2&#8211;3 Months"><label for="t3"><span class="dot"></span>2&#8211;3 Months</label></div>
+              <div class="ci radio"><input type="radio" name="timeline" id="t4" value="I&#8217;m flexible"><label for="t4"><span class="dot"></span>I&#8217;m flexible</label></div>
+            </div>
+          </div>
+          <div class="fg"><label class="fl">Any specific launch deadline or event?</label><input type="text" id="q_deadline" placeholder="e.g. Grand opening March 15, product launch in April&#8230;"></div>
+          <div class="fg"><label class="fl">How did you hear about Learnedmine?</label>
+            <select id="q_referral">
+              <option value="">&#8212; Please select &#8212;</option>
+              <option>Referral from a friend</option><option>Google Search</option>
+              <option>Instagram / Facebook</option><option>LinkedIn</option>
+              <option>WhatsApp</option><option>I saw previous work</option><option>Other</option>
+            </select>
+          </div>
+          <div class="brow">
+            <button type="button" class="btn btn-g" id="nav-p8"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 8H3M7 4L3 8l4 4"/></svg>Back</button>
+            <button type="button" class="btn btn-p" id="nav-n8"><span class="lbl">Continue</span><div class="spinner"></div><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 9 -->
+      <div class="step" data-step="9">
+        <div class="card">
+          <div class="snum">09</div><h2 class="stitle">Final Thoughts</h2>
+          <p class="sdesc">These last questions help us truly understand your vision before we begin.</p>
+          <div class="fg"><label class="fl">What would make this website a complete success? <span class="req">*</span></label><textarea id="q_success" placeholder="e.g. I want someone to land and immediately trust us enough to call. I want it to feel high-end but approachable&#8230;"></textarea></div>
+          <div class="fg"><label class="fl">Any past frustrations with your online presence?</label><textarea id="q_frustrations" placeholder="e.g. My old site looked outdated, slow on mobile, nobody could find me on Google&#8230;"></textarea></div>
+          <div class="fg"><label class="fl">Anything else Moses should know before starting?</label><textarea id="q_extra" placeholder="Any extra notes, specific ideas, or important details&#8230;"></textarea></div>
+          <div class="fg"><label class="fl">Preferred contact method for follow-up</label>
+            <div class="cgrid col3">
+              <div class="ci radio"><input type="radio" name="cPref" id="cp1" value="Email"><label for="cp1"><span class="dot"></span>Email</label></div>
+              <div class="ci radio"><input type="radio" name="cPref" id="cp2" value="WhatsApp / Phone"><label for="cp2"><span class="dot"></span>WhatsApp / Call</label></div>
+              <div class="ci radio"><input type="radio" name="cPref" id="cp3" value="Either works"><label for="cp3"><span class="dot"></span>Either works</label></div>
+            </div>
+          </div>
+          <div class="brow">
+            <button type="button" class="btn btn-g" id="nav-p9"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M13 8H3M7 4L3 8l4 4"/></svg>Back</button>
+            <button type="button" class="btn btn-p" id="submitBtn"><span class="lbl">Submit My Brief</span><div class="spinner"></div><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8h10M9 4l4 4-4 4"/></svg></button>
+          </div>
+        </div>
+      </div>
+
+    </form>
+
+    <!-- SUCCESS -->
+    <div class="success" id="successScreen">
+      <div class="card" style="text-align:center;padding:60px 40px;">
+        <div class="success-icon">&#10022;</div>
+        <h2>Brief Submitted!</h2>
+        <p style="color:var(--muted);line-height:1.8;font-weight:300;margin-bottom:28px;">Thank you! Your design brief has been sent to Moses Lugalia at Learnedmine.<br>A PDF copy has also been downloaded to your device.</p>
+        <div class="scards">
+          <div class="scard"><div class="sc-icon">&#128236;</div><h4>Email Sent</h4><p>Your complete brief has been emailed to Moses. Expect a response within 24 hours.</p></div>
+          <div class="scard"><div class="sc-icon">&#128196;</div><h4>PDF Downloaded</h4><p>A copy of your brief has been saved to your device for your records.</p></div>
+          <div class="scard"><div class="sc-icon">&#128206;</div><h4>Assets</h4><p>If you shared links or files, Moses will access them during review.</p></div>
+          <div class="scard"><div class="sc-icon">&#9203;&#65039;</div><h4>What&#8217;s Next</h4><p>Moses will review and send a tailored proposal within 1&#8211;2 business days.</p></div>
+        </div>
+        <div class="scontact">
+          <div class="scontact-label">Contact Moses Directly</div>
+          <p id="successEmail"></p>
+          <p>&#128222; <a href="tel:+254769319099" id="successPhone"></a> (WhatsApp available)</p>
+        </div>
+        <button class="btn-reset" id="resetBtn">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px"><path d="M2 8a6 6 0 1 1 1.5 4"/><path d="M2 12V8h4"/></svg>
+          Submit Another Brief
+        </button>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<footer>
+  <div>&#169; 2025 <strong style="color:var(--gold)">Learnedmine</strong> &#8212; Moses Lugalia</div>
+  <div id="footerContact"></div>
+</footer>
+
+<div id="toast"></div>
+
+<script>
+(function(){
+'use strict';
+
+/* ── ENCODED CONTACT (prevents Cloudflare interference) ── */
+const _e = ['l','e','a','r','n','e','r','m','i','n','e','0','1','@','g','m','a','i','l','.','c','o','m'].join('');
+const _p = '+254769319099';
+const _pd = '+254 769 319 099';
+
+/* ── INJECT CONTACT INTO DOM ── */
+function injectContacts(){
+  const hdr = document.getElementById('hdrEmail');
+  if(hdr) hdr.innerHTML = '<a href="mailto:'+_e+'" style="color:inherit;text-decoration:none">'+_e+'</a> &nbsp;&middot;&nbsp; '+_pd;
+  const se = document.getElementById('successEmail');
+  if(se) se.innerHTML = '&#128139; <a href="mailto:'+_e+'" style="color:#C9A84C">'+_e+'</a>';
+  const sp = document.getElementById('successPhone');
+  if(sp){ sp.href='tel:'+_p; sp.textContent=_pd; }
+  const fc = document.getElementById('footerContact');
+  if(fc) fc.innerHTML = '<a href="mailto:'+_e+'" style="color:#C9A84C">'+_e+'</a> &nbsp;&middot;&nbsp; <a href="tel:'+_p+'" style="color:#C9A84C">'+_pd+'</a>';
+}
+
+/* ── SETUP BANNER ── */
+document.getElementById('sbHead').addEventListener('click', function(){
+  document.getElementById('sbBody').classList.toggle('open');
+  document.getElementById('sbChevron').classList.toggle('open');
+});
+
+document.getElementById('saveConfigBtn').addEventListener('click', function(){
+  const svc = document.getElementById('cfgSvc').value.trim();
+  const tpl = document.getElementById('cfgTpl').value.trim();
+  const key = document.getElementById('cfgKey').value.trim();
+  const msg = document.getElementById('cfgMsg');
+  if(!svc||!tpl||!key){
+    msg.textContent='Please fill in all three fields.';
+    msg.className='sb-msg warn';
+    return;
+  }
+  try{
+    localStorage.setItem('lm_s',svc);
+    localStorage.setItem('lm_t',tpl);
+    localStorage.setItem('lm_k',key);
+  } catch(e){}
+  msg.textContent='Configuration saved! Email delivery is now active.';
+  msg.className='sb-msg ok';
+  document.getElementById('setupBadge').textContent='CONFIGURED';
+  document.getElementById('setupBadge').classList.add('ok');
+});
+
+function loadConfig(){
+  /* Setup banner is hidden from clients — credentials are hardcoded above.
+     This function is kept for backward compat only. */
+  try{
+    const svc=localStorage.getItem('lm_s');
+    const tpl=localStorage.getItem('lm_t');
+    const key=localStorage.getItem('lm_k');
+    if(svc&&tpl&&key){
+      const el=document.getElementById('cfgSvc');if(el)el.value=svc;
+      const el2=document.getElementById('cfgTpl');if(el2)el2.value=tpl;
+      const el3=document.getElementById('cfgKey');if(el3)el3.value=key;
+    }
+  } catch(e){}
+}
+
+/* ── NAVIGATION ── */
+const TOTAL=9;
+let current=1;
+
+function buildDots(){
+  const c=document.getElementById('stepDots');
+  c.innerHTML='';
+  for(let i=1;i<=TOTAL;i++){
+    const d=document.createElement('div');
+    d.className='sdot'+(i===1?' active':'');
+    d.id='sd'+i;
+    c.appendChild(d);
+  }
+}
+
+function updateProgress(){
+  document.getElementById('progFill').style.width=((current/TOTAL)*100)+'%';
+  document.getElementById('progCount').textContent='Step '+current+' of '+TOTAL;
+  for(let i=1;i<=TOTAL;i++){
+    const d=document.getElementById('sd'+i);
+    if(d) d.classList.toggle('active',i===current);
+  }
+}
+
+function goToStep(n){
+  document.querySelectorAll('.step').forEach(function(s){s.classList.remove('active');});
+  const t=document.querySelector('[data-step="'+n+'"]');
+  if(t) t.classList.add('active');
+  current=n;
+  updateProgress();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function wireNav(){
+  for(let i=1;i<=TOTAL;i++){
+    const nb=document.getElementById('nav-n'+i);
+    if(nb){ (function(step){nb.addEventListener('click',function(){if(step<TOTAL)goToStep(step+1);});})(i); }
+    const pb=document.getElementById('nav-p'+i);
+    if(pb){ (function(step){pb.addEventListener('click',function(){if(step>1)goToStep(step-1);});})(i); }
+  }
+}
+
+/* ── FILE UPLOADS ── */
+const uploadedFiles={logo:[],photos:[],copy:[],brand:[]};
+const assetActive={logo:false,photos:false,copy:false,videos:false,brand:false};
+
+function fmtSize(b){
+  if(b<1024)return b+'B';
+  if(b<1048576)return (b/1024).toFixed(1)+'KB';
+  return (b/1048576).toFixed(1)+'MB';
+}
+
+function renderFiles(key){
+  const list=document.getElementById('fl-'+key);
+  if(!list)return;
+  list.innerHTML='';
+  uploadedFiles[key].forEach(function(f,i){
+    const item=document.createElement('div');
+    item.className='file-item';
+    const del=document.createElement('button');
+    del.className='fdel';
+    del.textContent='✕';
+    del.title='Remove';
+    del.addEventListener('click',function(){uploadedFiles[key].splice(i,1);renderFiles(key);});
+    item.innerHTML='<span class="fname">📎 '+f.name+'</span><span class="fsize">'+fmtSize(f.size)+'</span>';
+    item.appendChild(del);
+    list.appendChild(item);
+  });
+}
+
+function wireAssets(){
+  document.querySelectorAll('.asset-head').forEach(function(head){
+    head.addEventListener('click',function(){
+      const key=head.getAttribute('data-key');
+      assetActive[key]=!assetActive[key];
+      head.classList.toggle('on',assetActive[key]);
+      const body=document.getElementById('ab-'+key);
+      if(body) body.classList.toggle('open',assetActive[key]);
+    });
+  });
+  document.querySelectorAll('.upload-zone input[type=file]').forEach(function(inp){
+    inp.addEventListener('change',function(){
+      const key=inp.getAttribute('data-key');
+      if(!key)return;
+      Array.from(inp.files).forEach(function(f){
+        if(!uploadedFiles[key].find(function(x){return x.name===f.name;}))
+          uploadedFiles[key].push(f);
+      });
+      renderFiles(key);
+      inp.value='';
+    });
+  });
+}
+
+/* ── COLLECT DATA ── */
+function val(id){const e=document.getElementById(id);return e?e.value.trim():'';}
+function checked(name){return Array.from(document.querySelectorAll('input[name="'+name+'"]:checked')).map(function(e){return e.value;}).join(', ');}
+function checkboxes(ids){return ids.map(function(id){const e=document.getElementById(id);return e&&e.checked?e.value:null;}).filter(Boolean).join(', ');}
+
+function collectData(){
+  function assetStr(key){
+    if(!assetActive[key])return'Not provided';
+    const files=uploadedFiles[key]?uploadedFiles[key].map(function(f){return f.name;}).join(', '):'';
+    const link=val('lnk-'+key);
+    if(!files&&!link)return'Selected but no files/link provided';
+    let out='';
+    if(files)out+='Files: '+files;
+    if(link)out+=(out?' | ':'')+'Link: '+link;
+    return out;
+  }
+  return {
+    name:val('q_name'),email:val('q_email'),phone:val('q_phone'),
+    business:val('q_biz'),bizDesc:val('q_bizDesc'),industry:val('q_industry'),
+    goal:checked('goal'),cta:val('q_cta'),audience:val('q_audience'),competitors:val('q_comp'),
+    vibes:checkboxes(['v1','v2','v3','v4','v5','v6','v7','v8','v9','v10']),
+    colors:val('q_colors'),brandColors:val('q_brandColors'),inspo:val('q_inspo'),dontWant:val('q_dontWant'),
+    pages:checkboxes(['pg1','pg2','pg3','pg4','pg5','pg6','pg7','pg8','pg9','pg10','pg11','pg12']),
+    extraPages:val('q_extraPages'),existing:checked('existing'),existUrl:val('q_existUrl'),
+    features:checkboxes(['f1','f2','f3','f4','f5','f6','f7','f8','f9','f10','f11','f12','f13','f14']),
+    otherFeat:val('q_otherFeat'),cms:checked('cms'),
+    logo:checked('logo'),content:checkboxes(['c1','c2','c3','c4','c5','c6']),
+    social:checkboxes(['s1','s2','s3','s4','s5','s6']),hosting:checked('hosting'),domain:val('q_domain'),
+    assetLogo:assetStr('logo'),assetPhotos:assetStr('photos'),assetCopy:assetStr('copy'),
+    assetVideos:assetActive.videos?'Link: '+val('lnk-videos'):'Not provided',
+    assetBrand:assetStr('brand'),assetNotes:val('q_assetNotes'),
+    budget:checked('budget'),timeline:checked('timeline'),deadline:val('q_deadline'),referral:val('q_referral'),
+    success:val('q_success'),frustrations:val('q_frustrations'),extra:val('q_extra'),cPref:checked('cPref'),
+    submitted:new Date().toLocaleString('en-KE',{dateStyle:'full',timeStyle:'short'})
+  };
+}
+
+/* ── PDF ── */
+function generatePDF(d){
+  if(!window.jspdf){toast('PDF library not loaded yet — try again in a moment.','err');return null;}
+  const {jsPDF}=window.jspdf;
+  const doc=new jsPDF({unit:'mm',format:'a4'});
+  const W=210,M=18,CW=W-M*2;
+  const GOLD='#C9A84C',WHITE='#F0EDE8',MUTED='#666660',DARK='#080808';
+  let y=0;
+
+  function addPage(){doc.addPage();y=0;pageHeader();}
+  function chk(n){if(y+n>272)addPage();}
+  function pageHeader(){
+    doc.setFillColor('#0D0B06');doc.rect(0,0,210,14,'F');
+    doc.setFont('helvetica','bold');doc.setFontSize(8);doc.setTextColor(GOLD);
+    doc.text('LEARNEDMINE \u2014 WEBSITE DESIGN BRIEF',M,9);
+    doc.setTextColor('#444440');doc.text('Submitted: '+d.submitted,W-M,9,{align:'right'});
+    y=22;
+  }
+
+  /* COVER */
+  doc.setFillColor(DARK);doc.rect(0,0,210,297,'F');
+  doc.setFillColor(GOLD);doc.rect(0,0,210,3,'F');
+  doc.setFont('helvetica','bold');doc.setFontSize(24);doc.setTextColor(GOLD);doc.text('LEARNEDMINE',M,50);
+  doc.setFont('helvetica','normal');doc.setFontSize(10);doc.setTextColor(MUTED);doc.text('Website Design Studio',M,59);
+  doc.setDrawColor(GOLD);doc.setLineWidth(.4);doc.line(M,66,W-M,66);
+  doc.setFont('helvetica','bold');doc.setFontSize(18);doc.setTextColor(WHITE);doc.text('CLIENT DESIGN BRIEF',M,80);
+  doc.setFont('helvetica','normal');doc.setFontSize(9);doc.setTextColor(MUTED);doc.text('Complete Website Requirements Document',M,89);
+
+  doc.setFillColor('#111111');doc.roundedRect(M,102,CW,68,2,2,'F');
+  doc.setDrawColor(GOLD);doc.setLineWidth(.3);doc.roundedRect(M,102,CW,68,2,2,'S');
+  doc.setFontSize(7);doc.setFont('helvetica','bold');doc.setTextColor(GOLD);doc.text('CLIENT INFORMATION',M+8,113);
+  const ci=[['Name',d.name||'\u2014'],['Email',_e],['Phone',d.phone||'\u2014'],['Business',d.business||'\u2014'],['Industry',d.industry||'\u2014'],['Submitted',d.submitted]];
+  let cy=121;
+  ci.forEach(function(row){
+    doc.setFont('helvetica','bold');doc.setFontSize(7.5);doc.setTextColor(MUTED);doc.text(row[0]+':',M+8,cy);
+    doc.setFont('helvetica','normal');doc.setTextColor(WHITE);doc.text(String(row[1]),M+48,cy);
+    cy+=7.5;
+  });
+
+  doc.setFillColor('#0F0C02');doc.roundedRect(M,184,CW,90,2,2,'F');
+  doc.setDrawColor(GOLD);doc.setLineWidth(.5);doc.roundedRect(M,184,CW,90,2,2,'S');
+  doc.setFont('helvetica','bold');doc.setFontSize(7.5);doc.setTextColor(GOLD);doc.text('\u26A1 QUICK SUMMARY FOR CLAUDE',M+6,195);
+  doc.setFont('helvetica','normal');doc.setFontSize(8);doc.setTextColor(WHITE);
+  const summary=[
+    'Business: '+(d.business||'\u2014')+' ('+( d.industry||'General')+')',
+    'Goal: '+(d.goal||'\u2014'),
+    'Style: '+(d.vibes||'\u2014'),
+    'Pages: '+((d.pages||'').split(', ').slice(0,5).join(', ')||'\u2014'),
+    'Features: '+((d.features||'').split(', ').slice(0,4).join(', ')||'\u2014'),
+    'Budget: '+(d.budget||'\u2014')+' | Timeline: '+(d.timeline||'\u2014'),
+    'Logo: '+(d.logo||'\u2014')+' | Content ready: '+((d.content||'').split(', ').slice(0,2).join(', ')||'None'),
+    'Contact pref: '+(d.cPref||'\u2014')+' | Referral: '+(d.referral||'\u2014')
+  ];
+  let sy=204;
+  summary.forEach(function(line){
+    const w=doc.splitTextToSize(line,CW-14);
+    doc.text(w,M+6,sy);sy+=w.length*5+1;
+  });
+
+  doc.setFontSize(7);doc.setTextColor(MUTED);
+  doc.text('Moses Lugalia \u00B7 '+_e+' \u00B7 '+_pd,W/2,286,{align:'center'});
+  doc.setDrawColor(GOLD);doc.line(M,290,W-M,290);
+  doc.setTextColor(GOLD);doc.text('Page 1',W-M,295,{align:'right'});
+
+  /* PAGES 2+ */
+  doc.addPage();y=0;pageHeader();
+
+  function section(title){
+    chk(18);
+    doc.setFillColor('#1A1400');doc.rect(M,y,CW,10,'F');
+    doc.setFillColor(GOLD);doc.rect(M,y,3,10,'F');
+    doc.setFont('helvetica','bold');doc.setFontSize(8.5);doc.setTextColor(GOLD);
+    doc.text(title,M+7,y+7);y+=14;
+  }
+
+  function row(label,value){
+    if(!value)value='\u2014';
+    chk(12);
+    doc.setFont('helvetica','bold');doc.setFontSize(7.5);doc.setTextColor(MUTED);doc.text(label,M,y);
+    const w=doc.splitTextToSize(String(value),CW-44);
+    doc.setFont('helvetica','normal');doc.setTextColor(WHITE);doc.text(w,M+44,y);
+    y+=w.length*4.5+3;
+  }
+
+  function block(text){
+    if(!text)return;
+    chk(16);
+    const w=doc.splitTextToSize(String(text),CW-12);
+    const h=w.length*5+8;
+    doc.setFillColor('#141200');doc.roundedRect(M,y,CW,h,1,1,'F');
+    doc.setDrawColor(GOLD);doc.setLineWidth(.2);doc.roundedRect(M,y,CW,h,1,1,'S');
+    doc.setFont('helvetica','normal');doc.setFontSize(9);doc.setTextColor(WHITE);doc.text(w,M+6,y+6);
+    y+=h+5;
+  }
+
+  section('01 \u00B7 ABOUT THE BUSINESS');
+  row('Business Name',d.business);row('Industry',d.industry);row('What They Do','');block(d.bizDesc);y+=2;
+
+  section('02 \u00B7 GOALS & PURPOSE');
+  row('Primary Goal',d.goal);row('Desired CTA',d.cta);row('Target Audience','');block(d.audience);row('Competitors',d.competitors);y+=2;
+
+  section('03 \u00B7 LOOK & FEEL');
+  row('Design Vibes',d.vibes);row('Color Scheme',d.colors);row('Brand Colors',d.brandColors);row('Inspiration','');block(d.inspo);row('Dislikes',d.dontWant);y+=2;
+
+  section('04 \u00B7 PAGES & STRUCTURE');
+  row('Pages Required',d.pages);row('Extra Pages',d.extraPages);row('Existing Site',d.existing);row('Existing URL',d.existUrl);y+=2;
+
+  section('05 \u00B7 FEATURES');
+  row('Features',d.features);row('Other Features',d.otherFeat);row('CMS / Self-manage',d.cms);y+=2;
+
+  section('06 \u00B7 CONTENT & BRANDING');
+  row('Logo Status',d.logo);row('Content Ready',d.content);row('Social Platforms',d.social);row('Hosting Status',d.hosting);row('Domain',d.domain);y+=2;
+
+  section('07 \u00B7 SHARED ASSETS');
+  row('Logo',d.assetLogo);row('Photos',d.assetPhotos);row('Written Copy',d.assetCopy);
+  row('Videos',d.assetVideos);row('Brand Guide',d.assetBrand);row('Asset Notes',d.assetNotes);y+=2;
+
+  section('08 \u00B7 BUDGET & TIMELINE');
+  row('Budget',d.budget);row('Timeline',d.timeline);row('Hard Deadline',d.deadline);row('Referral',d.referral);y+=2;
+
+  section('09 \u00B7 FINAL THOUGHTS');
+  row('Contact Preference',d.cPref);row('Success Vision','');block(d.success);
+  row('Past Frustrations','');block(d.frustrations||'None mentioned');
+  row('Extra Notes','');block(d.extra||'None');y+=8;
+
+  chk(38);
+  doc.setFillColor('#0D0900');doc.roundedRect(M,y,CW,38,2,2,'F');
+  doc.setDrawColor(GOLD);doc.setLineWidth(.5);doc.roundedRect(M,y,CW,38,2,2,'S');
+  doc.setFont('helvetica','bold');doc.setFontSize(9);doc.setTextColor(GOLD);doc.text('\u26A1 ACTION REQUIRED \u2014 LEARNEDMINE',M+6,y+8);
+  doc.setFont('helvetica','normal');doc.setFontSize(8);doc.setTextColor(WHITE);
+  const acts=['1. Contact '+(d.name||'client')+' via '+(d.cPref||'email/WhatsApp')+' within 24 hours','2. Confirm budget ('+( d.budget||'TBD')+') and timeline ('+(d.timeline||'TBD')+')','3. Request any outstanding assets not yet shared (Step 07)','4. Send tailored proposal and project quote'];
+  let ay=y+16;
+  acts.forEach(function(a){doc.text(a,M+6,ay);ay+=6;});
+  y+=44;
+
+  const pc=doc.getNumberOfPages();
+  for(let i=2;i<=pc;i++){
+    doc.setPage(i);
+    doc.setDrawColor(GOLD);doc.setLineWidth(.2);doc.line(M,291,W-M,291);
+    doc.setFontSize(7);doc.setFont('helvetica','normal');doc.setTextColor(MUTED);
+    doc.text('LEARNEDMINE \u00B7 '+_e+' \u00B7 '+_pd,W/2,295,{align:'center'});
+    doc.setTextColor(GOLD);doc.text('Page '+i,W-M,295,{align:'right'});
+  }
+  return doc;
+}
+
+/* ── EMAIL CONFIG (hardcoded — clients never see this) ── */
+/* ✏️  MOSES: Replace these 3 values with your EmailJS credentials once */
+const _EJS_SVC  = 'YOUR_SERVICE_ID';   // e.g. 'service_abc123'
+const _EJS_TPL  = 'YOUR_TEMPLATE_ID';  // e.g. 'template_xyz789'
+const _EJS_KEY  = 'YOUR_PUBLIC_KEY';   // e.g. 'AbCdEfGhIjKlMnOp'
+
+/* ── EMAIL ── */
+async function sendEmail(d){
+  let svc=_EJS_SVC, tpl=_EJS_TPL, key=_EJS_KEY;
+  /* Also check localStorage as fallback (for backward compat) */
+  try{
+    const ls=localStorage.getItem('lm_s'),lt=localStorage.getItem('lm_t'),lk=localStorage.getItem('lm_k');
+    if(ls&&lt&&lk){svc=ls;tpl=lt;key=lk;}
+  }catch(e){}
+  if(!svc||!tpl||!key||svc==='YOUR_SERVICE_ID')return false;
+
+  function s2(label,val){return '<div style="margin:10px 0"><p style="color:#888;font-size:10px;letter-spacing:1px;text-transform:uppercase;margin:0 0 4px">'+label+'</p><p style="color:#F0EDE8;font-size:13px;background:#111;padding:10px 14px;border-radius:3px;border-left:3px solid #C9A84C;margin:0">'+(val||'\u2014').replace(/\n/g,'<br>')+'</p></div>';}
+  function r2(label,val){return '<p style="font-size:13px;margin:8px 0;color:#F0EDE8"><strong style="color:#888">'+label+':</strong> '+(val||'\u2014')+'</p>';}
+
+  const body='<div style="background:#080808;color:#F0EDE8;font-family:Georgia,serif;padding:0;margin:0"><div style="background:#C9A84C;height:4px"></div><div style="padding:32px 36px"><h1 style="color:#C9A84C;font-size:22px;margin:0 0 4px">LEARNEDMINE</h1><p style="color:#888;font-size:12px;margin:0 0 28px">Website Design Studio</p><h2 style="color:#F0EDE8;font-size:18px;border-bottom:1px solid #333;padding-bottom:12px;margin-bottom:20px">New Client Design Brief</h2><table style="width:100%;background:#111;border:1px solid #2a2500;border-radius:4px;padding:20px;margin-bottom:24px;font-size:13px"><tr><td style="padding:20px"><p style="color:#C9A84C;font-size:10px;letter-spacing:2px;text-transform:uppercase;margin:0 0 14px">CLIENT</p>'+r2('Name',d.name)+r2('Email',d.email)+r2('Phone',d.phone||'\u2014')+r2('Business',d.business)+r2('Industry',d.industry||'\u2014')+r2('Submitted',d.submitted)+'</td></tr></table>'+s2('01 \u2014 Business Description',d.bizDesc)+r2('02 \u2014 Goal',d.goal)+r2('CTA',d.cta)+s2('Target Audience',d.audience)+r2('Competitors',d.competitors)+r2('03 \u2014 Vibes',d.vibes)+r2('Colors',d.colors)+r2('Brand Colors',d.brandColors)+s2('Inspiration',d.inspo)+r2('Dislikes',d.dontWant)+r2('04 \u2014 Pages',d.pages)+r2('Extra Pages',d.extraPages||'\u2014')+r2('Existing Site',d.existing)+r2('URL',d.existUrl||'\u2014')+r2('05 \u2014 Features',d.features)+r2('Other Features',d.otherFeat||'\u2014')+r2('CMS',d.cms)+r2('06 \u2014 Logo',d.logo)+r2('Content Ready',d.content)+r2('Social',d.social)+r2('Hosting',d.hosting)+r2('Domain',d.domain||'\u2014')+r2('07 \u2014 Logo File',d.assetLogo)+r2('Photos',d.assetPhotos)+r2('Copy',d.assetCopy)+r2('Videos',d.assetVideos)+r2('Brand Guide',d.assetBrand)+r2('Asset Notes',d.assetNotes||'\u2014')+r2('08 \u2014 Budget',d.budget)+r2('Timeline',d.timeline)+r2('Deadline',d.deadline||'\u2014')+r2('Referral',d.referral||'\u2014')+r2('09 \u2014 Contact Pref',d.cPref)+s2('Success Vision',d.success)+s2('Frustrations',d.frustrations||'\u2014')+s2('Extra Notes',d.extra||'\u2014')+'<div style="background:#0D0900;border:1px solid #C9A84C;border-radius:4px;padding:20px;margin-top:24px"><p style="color:#C9A84C;font-size:10px;letter-spacing:2px;text-transform:uppercase;margin:0 0 10px">\u26A1 ACTION ITEMS</p><p style="color:#F0EDE8;font-size:13px;margin:6px 0">1. Contact <strong>'+d.name+'</strong> via '+(d.cPref||'email/WhatsApp')+' within 24 hours</p><p style="color:#F0EDE8;font-size:13px;margin:6px 0">2. Confirm budget ('+(d.budget||'TBD')+') and timeline ('+(d.timeline||'TBD')+')</p><p style="color:#F0EDE8;font-size:13px;margin:6px 0">3. Request any assets not yet shared</p><p style="color:#F0EDE8;font-size:13px;margin:6px 0">4. Send tailored proposal + quote</p></div></div><div style="background:#0D0900;padding:16px 36px;text-align:center;font-size:11px;color:#555">Learnedmine \u00B7 '+_e+' \u00B7 '+_pd+'</div></div>';
+
+  try{
+    const res=await fetch('https://api.emailjs.com/api/v1.0/email/send',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        service_id:svc,template_id:tpl,user_id:key,
+        template_params:{to_email:_e,subject:'New Design Brief \u2014 '+d.business+' ('+d.name+')',html_body:body,client_name:d.name,client_email:d.email,business_name:d.business}
+      })
+    });
+    return res.ok;
+  }catch(e){console.error('Email error:',e);return false;}
+}
+
+/* ── TOAST ── */
+function toast(msg,type,dur){
+  const t=document.getElementById('toast');
+  t.textContent=msg;
+  t.className='show '+(type||'');
+  setTimeout(function(){t.className='';},dur||4000);
+}
+
+/* ── SUBMIT ── */
+document.getElementById('submitBtn').addEventListener('click',async function(){
+  const name=val('q_name'),email=val('q_email'),biz=val('q_biz'),success=val('q_success');
+  const missing=[];
+  if(!name) missing.push('Full Name (Step 1)');
+  if(!email) missing.push('Email Address (Step 1)');
+  if(!biz) missing.push('Business Name (Step 1)');
+  if(!success) missing.push('Success Vision (Step 9 — this field)');
+  if(missing.length){
+    /* Highlight the success field since it's the most commonly missed */
+    const sf=document.getElementById('q_success');
+    if(sf){sf.style.borderColor='#e74c3c';sf.style.boxShadow='0 0 0 3px rgba(231,76,60,.15)';sf.focus();}
+    toast('Please fill in: '+missing.join(' · '),'err',6000);
+    return;
+  }
+  /* Clear any highlight */
+  const sf=document.getElementById('q_success');
+  if(sf){sf.style.borderColor='';sf.style.boxShadow='';}
+  const btn=document.getElementById('submitBtn');
+  btn.classList.add('loading');
+  const d=collectData();
+
+  try{
+    const pdf=generatePDF(d);
+    if(pdf) pdf.save('Learnedmine-Brief-'+(d.business||'Client').replace(/\s+/g,'-')+'.pdf');
+  }catch(e){console.error('PDF error:',e);}
+
+  const sent=await sendEmail(d);
+  btn.classList.remove('loading');
+
+  document.getElementById('mainForm').style.display='none';
+  document.getElementById('successScreen').style.display='block';
+  document.querySelector('.prog-wrap').style.display='none';
+  document.getElementById('stepDots').style.display='none';
+  if(sent){toast('Brief submitted and emailed to Moses!','ok',5000);}
+  else{toast('PDF saved. Configure EmailJS in the setup panel to enable auto-email.','',6000);}
+  window.scrollTo({top:0,behavior:'smooth'});
+});
+
+/* ── RESET ── */
+document.getElementById('resetBtn').addEventListener('click',function(){
+  document.querySelectorAll('input[type=text],input[type=email],input[type=tel],input[type=url],textarea').forEach(function(e){e.value='';});
+  document.querySelectorAll('input[type=checkbox],input[type=radio]').forEach(function(e){e.checked=false;});
+  document.querySelectorAll('select').forEach(function(e){e.selectedIndex=0;});
+  Object.keys(uploadedFiles).forEach(function(k){uploadedFiles[k]=[];});
+  Object.keys(assetActive).forEach(function(k){assetActive[k]=false;});
+  document.querySelectorAll('.asset-head').forEach(function(h){h.classList.remove('on');});
+  document.querySelectorAll('.asset-body').forEach(function(b){b.classList.remove('open');});
+  document.querySelectorAll('.file-list').forEach(function(l){l.innerHTML='';});
+  document.getElementById('mainForm').style.display='block';
+  document.getElementById('successScreen').style.display='none';
+  document.querySelector('.prog-wrap').style.display='block';
+  document.getElementById('stepDots').style.display='flex';
+  goToStep(1);
+  toast('Form reset \u2014 ready for a new client!','ok',3000);
+});
+
+/* ── INIT ── */
+buildDots();
+updateProgress();
+wireNav();
+wireAssets();
+loadConfig();
+injectContacts();
+
+})();
+</script>
+</body>
+</html>
